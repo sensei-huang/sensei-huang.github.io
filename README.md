@@ -1,1 +1,2 @@
-# sensei-huang.github.io
+# Personal site
+Site to share code easily.
