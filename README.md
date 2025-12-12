@@ -1,2 +1,2 @@
 # Personal site
-Site to share code easily.
+Personal site to share code easily.
