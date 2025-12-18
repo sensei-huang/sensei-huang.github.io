@@ -2,18 +2,33 @@
   <head>
   </head>
   <body>
-    <p>Drag this bookmark into your bookmark bar: <a id="bookmark">Songbase chords</a></p>
-    <p>To use this, go to a song on songbase (won't work if you use this on the home page) and click on the bookmark. The extension should pop up on the website.<br><br><br>If you have any more questions or found some problems, email me at <a href="mailto:samuelminghuang@gmail.com">samuelminghuang@gmail.com</a></p>
+    <p>To use this on a non-mobile device, drag this bookmark into your bookmark bar: <a id="bookmark">Songbase chords</a><br>
+      Then go to a song on songbase (won't work if you use this on the home page) and click on the bookmark. The extension should pop up on the website.<br><br>
+      To use this on a mobile device, click this: <button onclick="copyCode()">Copy code</button><br><br><br>
+      If you have any more questions or found some problems, email me at <a href="mailto:samuelminghuang@gmail.com">samuelminghuang@gmail.com</a></p>
     <script>
-      document.getElementById("bookmark").href = `javascript: 
+      const js = `javascript: 
       let extensionCode = document.createElement("script");
       extensionCode.type = "text/javascript";
       extensionCode.src = 'https://raw.githack.com/sensei-huang/hymn-research/main/songBaseExtension.min.js';
       document.head.appendChild(extensionCode);`;
+      document.getElementById("bookmark").href = js;
 
       // To change JS bookmarklet, edit code from https://github.com/sensei-huang/hymn-research/blob/main/songBaseExtension.js
       // Minify using https://jscompress.com/
       // Insert the minified code to https://github.com/sensei-huang/hymn-research/blob/main/songBaseExtension.min.js
+
+      function copyCode(){
+        var copyText = document.createElement("input");
+        copyText.innerText = js;
+        // Select the text field
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); // For mobile devices
+         // Copy the text inside the text field
+        navigator.clipboard.writeText(js);
+        // Alert the copied text
+        alert("Copied code");
+      }
     </script>
   </body>
 </html>
