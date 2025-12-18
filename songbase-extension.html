@@ -4,16 +4,16 @@
   <body>
     <p>To use this on a non-mobile device, drag this bookmark into your bookmark bar: <a id="bookmark">Songbase chords</a><br>
       Then go to a song on songbase (won't work if you use this on the home page) and click on the bookmark. The extension should pop up on the website.<br><br>
-      To use this on a mobile device, click this: <button onclick="copyCode()">Copy code</button><br>
-      Then go to a song on songbase (won't work if you use this on the home page) and paste the code you copied into the search bar. The extension should pop up on the website<br><br><br>
+      To use this on a mobile device, click <button onclick="copyCode()">this</button> to copy the code<br>
+      Then go to a song on songbase (won't work if you use this on the home page) and type (without the apostrophes) 'javascript: ' and paste the code you copied into the search bar. The extension should pop up on the website<br><br><br>
       If you have any more questions or found some problems, email me at <a href="mailto:samuelminghuang@gmail.com">samuelminghuang@gmail.com</a></p>
     <script>
-      const js = `javascript: 
-      let extensionCode = document.createElement("script");
-      extensionCode.type = "text/javascript";
-      extensionCode.src = 'https://raw.githack.com/sensei-huang/hymn-research/main/songBaseExtension.min.js';
-      document.head.appendChild(extensionCode);`;
-      document.getElementById("bookmark").href = js;
+      const js = `
+let extensionCode = document.createElement("script");
+extensionCode.type = "text/javascript";
+extensionCode.src = 'https://raw.githack.com/sensei-huang/hymn-research/main/songBaseExtension.min.js';
+document.head.appendChild(extensionCode);`;
+document.getElementById("bookmark").href = "javascript: "+js;
 
       // To change JS bookmarklet, edit code from https://github.com/sensei-huang/hymn-research/blob/main/songBaseExtension.js
       // Minify using https://jscompress.com/
