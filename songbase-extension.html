@@ -8,11 +8,12 @@
       Then try bookmark it or go to a song on songbase (won't work if you use this on the home page) and manually type (without the apostrophes) 'javascript: ' and paste the code you copied into the search bar and press search. The extension should pop up on the website<br><br><br>
       If you have any more questions or found some problems, email me at <a href="mailto:samuelminghuang@gmail.com">samuelminghuang@gmail.com</a></p>
     <script>
-      const js = `
+      const js = `(() => {
 let extensionCode = document.createElement("script");
 extensionCode.type = "text/javascript";
 extensionCode.src = 'https://raw.githack.com/sensei-huang/hymn-research/main/songBaseExtension.min.js';
-document.head.appendChild(extensionCode);`;
+document.head.appendChild(extensionCode);
+})();`;
 document.getElementById("bookmark").href = "javascript: "+js;
 
       // To change JS bookmarklet, edit code from https://github.com/sensei-huang/hymn-research/blob/main/songBaseExtension.js
