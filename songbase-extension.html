@@ -9,17 +9,18 @@
       If you have any more questions or found some problems, email me at <a href="mailto:samuelminghuang@gmail.com">samuelminghuang@gmail.com</a></p>
     <script>
       const js = `(() => {
-let extensionCode = document.createElement("script");
-extensionCode.type = "text/javascript";
-extensionCode.src = 'https://cdn.jsdelivr.net/gh/sensei-huang/hymn-research@main/songbaseExtension/songBaseExtension.min.js';
-document.head.appendChild(extensionCode);
-})(); void(0);`;
+async function getCode(){try{const e=await fetch("https://cdn.jsdelivr.net/gh/sensei-huang/hymn-research@main/songbaseExtension/songBaseExtension.min.js");if(e.ok){const t=await e.text();localStorage.setItem("extensionCode",t);let n=document.createElement("script");n.type="text/javascript",n.innerHTML=t,document.head.appendChild(n)}else{let e=localStorage.getItem("extensionCode");if(null!==e){let t=document.createElement("script");t.type="text/javascript",t.innerHTML=e,document.head.appendChild(t)}else alert("Couldn't load extension!")}}catch(e){let t=localStorage.getItem("extensionCode");if(null!==t){let e=document.createElement("script");e.type="text/javascript",e.innerHTML=t,document.head.appendChild(e)}else alert("Couldn't load extension!");console.error(e.message)}}getCode();
+      })(); void(0);`;
 document.getElementById("bookmark").href = "javascript: "+js;
 
-      // To change JS bookmarklet, edit code from https://github.com/sensei-huang/hymn-research/blob/main/songbaseExtension/songBaseExtension.js
+      // To change JS bookmarklet behaviour, edit code from https://github.com/sensei-huang/hymn-research/blob/main/songbaseExtension/songBaseExtension.js
       // Minify using https://minify-js.com/
       // Insert the minified code to https://github.com/sensei-huang/hymn-research/blob/main/songbaseExtension/songBaseExtension.min.js
       // Proceed to purge the jsdelivr link for that specific update(due to jsdelivr permanent caching) using https://www.jsdelivr.com/tools/purge
+
+      // To change JS bookmarklet, edit code from https://github.com/sensei-huang/hymn-research/blob/main/songbaseExtension/bookmarklet.js
+      // Minify using https://minify-js.com/
+      // Insert the minified code to into the js variable above
 
       function copyCode(){
         var copyText = document.createElement("input");
