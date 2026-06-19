@@ -1,0 +1,39 @@
+<html>
+  <head>
+    <style>
+      .shade {
+        background-color: #f1f3f5;
+        border: 1px solid #ced4da;
+        opacity: 0.8;
+      }
+    </style>
+  </head>
+  <body>
+    <span>Ascorbic acid Molar mass (gmol-1):</span><input type="text" id="Ascmmass" class="shade" value="176.12"></input><br>
+    <span>Volume of ascorbic acid (L):</span><input type="text" id="Ascvol" value="1"></input><br>
+    <span>Concentration of ascorbic acid (molL-1):</span><input type="text" id="Ascconc" value="0.005"></input><br>
+    
+    <span>Moles of ascorbate (mol):</span><input type="text" id="Ascmol" disabled></input><br>
+    <span>Ascorbate mass (g):</span><input type="text" id="Ascmass" disabled></input><br>
+    <br><br>
+
+    
+    <script>
+      let ascmmass = document.getElementById("Ascmmass");
+      let ascvol = document.getElementById("Ascvol");
+      let ascconc = document.getElementById("Ascconc");
+      let ascmol = document.getElementById("Ascmol");
+      let ascmass = document.getElementById("Ascmass");
+      [ascmmass, ascvol, ascconc].forEach(element => {
+        element.addEventListener("input", (event) => {
+          ascmol.value = Number(ascconc.value)*Number(ascvol.value); //n=cV
+          ascmass.value = Number(ascmmass.value)*Number(ascmol.value); //m=nM
+        });
+      });
+      ascmol.value = Number(ascconc.value)*Number(ascvol.value); //n=cV
+      ascmass.value = Number(ascmmass.value)*Number(ascmol.value); //m=nM
+
+      // Next batch of calculations
+    </script>
+  </body>
+</html>
