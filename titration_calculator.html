@@ -17,23 +17,29 @@
     <span>Ascorbate mass (g):</span><input type="text" id="Ascmass" disabled></input><br>
     <br><br>
 
+    <span>Neutral titration (no acid or base):</span><br>
+    <span>Ka of Ascorbic acid:</span><input type="text" id="AscKa" class="shade" value="7.9e-5"></input><br>
+    <span>Ascorbic acid predicted pH:</span><input type="text" id="AscpH" disabled></input><br>
     
     <script>
+      function quad(a, b, c){
+        return (Math.sqrt(b**2-4*a*c)-b)/(2*a);
+      }
+      
       let ascmmass = document.getElementById("Ascmmass");
       let ascvol = document.getElementById("Ascvol");
       let ascconc = document.getElementById("Ascconc");
       let ascmol = document.getElementById("Ascmol");
       let ascmass = document.getElementById("Ascmass");
-      [ascmmass, ascvol, ascconc].forEach(element => {
+      let ascKa = document.getElementById("AscKa");
+      let ascpH = document.getElementById("AscpH");
+      [ascmmass, ascvol, ascconc, ascKa].forEach(element => {
         element.addEventListener("input", (event) => {
           ascmol.value = Number(ascconc.value)*Number(ascvol.value); //n=cV
           ascmass.value = Number(ascmmass.value)*Number(ascmol.value); //m=nM
+          ascpH.value = -Math.log10(quad(1, Number(ascKa.value), -Number(ascKa.value)*Number(ascconc.value))); //Quadratic to solve for pH
         });
       });
-      ascmol.value = Number(ascconc.value)*Number(ascvol.value); //n=cV
-      ascmass.value = Number(ascmmass.value)*Number(ascmol.value); //m=nM
-
-      // Next batch of calculations
     </script>
   </body>
 </html>
