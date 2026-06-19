@@ -20,6 +20,12 @@
     <span>Neutral titration (no acid or base):</span><br>
     <span>Ka of Ascorbic acid:</span><input type="text" id="AscKa" class="shade" value="7.9e-5"></input><br>
     <span>Ascorbic acid predicted pH:</span><input type="text" id="AscpH" disabled></input><br>
+
+    <span>Acidic titration:</span><br>
+    <span>Desired pH:</span><input type="text" id="AcidpH" value="2"></input><br>
+    <span>HCL concentration (molL-1):</span><input type="text" id="HCLc" value="0.1"></input><br>
+    <span>HCL volume (L):</span><input type="text" id="HCLvol" disabled></input><br>
+    
     
     <script>
       function quad(a, b, c){
@@ -31,15 +37,29 @@
       let ascconc = document.getElementById("Ascconc");
       let ascmol = document.getElementById("Ascmol");
       let ascmass = document.getElementById("Ascmass");
+      
       let ascKa = document.getElementById("AscKa");
       let ascpH = document.getElementById("AscpH");
-      [ascmmass, ascvol, ascconc, ascKa].forEach(element => {
+      
+      let acidpH = document.getElementById("AcidpH");
+      let hclc = document.getElementById("HCLc");
+      let hclvol = document.getElementById("HCLvol");
+
+      function update(){
+        ascmol.value = Number(ascconc.value)*Number(ascvol.value); //n=cV
+        ascmass.value = Number(ascmmass.value)*Number(ascmol.value); //m=nM
+        ascpH.value = -Math.log10(quad(1, Number(ascKa.value), -Number(ascKa.value)*Number(ascconc.value))); //Quadratic to solve for pH
+        // Using my document formula to get acid volume
+        let H = 10**(-Number(acidpH.value)); //H+
+        let A = (Number(ascconc.value))/(1+Number(ascKa.value)/H); //A-
+        hclvol.value = (Number(ascvol.value)*H-A)/(Number(hclc.value)-H);
+      }
+      [ascmmass, ascvol, ascconc, ascKa, acidpH, hclc].forEach(element => {
         element.addEventListener("input", (event) => {
-          ascmol.value = Number(ascconc.value)*Number(ascvol.value); //n=cV
-          ascmass.value = Number(ascmmass.value)*Number(ascmol.value); //m=nM
-          ascpH.value = -Math.log10(quad(1, Number(ascKa.value), -Number(ascKa.value)*Number(ascconc.value))); //Quadratic to solve for pH
+          update();
         });
       });
+      update();
     </script>
   </body>
 </html>
