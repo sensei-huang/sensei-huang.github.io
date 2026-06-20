@@ -21,15 +21,25 @@
     <span>Ka of Ascorbic acid:</span><input type="text" id="AscKa" class="shade" value="7.9e-5"></input><br>
     <span>Ascorbic acid predicted pH:</span><input type="text" id="AscpH" disabled></input><br>
 
+    <br><br>
     <span>Acidic titration:</span><br>
     <span>Desired pH:</span><input type="text" id="AcidpH" value="2"></input><br>
+    <span>Aliquot volume (L):</span><input type="text" id="Acidali" value="0.05"></input><br>
     <span>HCL concentration (molL-1):</span><input type="text" id="HCLc" value="0.1"></input><br>
     <span>HCL volume (L):</span><input type="text" id="HCLvol" disabled></input><br>
+
+    <br><br>
+    <span>Basic titration:</span><br>
+    <span>Ka of Na2HPO4:</span><input type="text" id="HPOKa" class="shade" value="6.23e-8"></input><br>
+    <span>Desired pH:</span><input type="text" id="BasepH" value="4"></input><br>
+    <span>Aliquot volume (L):</span><input type="text" id="Baseali" value="0.05"></input><br>
+    <span>NaHPO4 concentration (molL-1):</span><input type="text" id="HPOc" value="0.1"></input><br>
+    <span>NaHPO4 volume (L):</span><input type="text" id="HPOvol" disabled></input><br>
     
     
     <script>
       function quad(a, b, c){
-        return (Math.sqrt(b**2-4*a*c)-b)/(2*a);
+        return (Math.sqrt(b*b-4*a*c)-b)/(2*a);
       }
       
       let ascmmass = document.getElementById("Ascmmass");
@@ -42,8 +52,15 @@
       let ascpH = document.getElementById("AscpH");
       
       let acidpH = document.getElementById("AcidpH");
+      let acidali = document.getElementById("Acidali");
       let hclc = document.getElementById("HCLc");
       let hclvol = document.getElementById("HCLvol");
+
+      let hpoKa = document.getElementById("HPOKa");
+      let basepH = document.getElementById("BasepH");
+      let baseali = document.getElementById("Baseali");
+      let hpoc = document.getElementById("HPOc");
+      let hpovol = document.getElementById("HPOvol");
 
       function update(){
         ascmol.value = Number(ascconc.value)*Number(ascvol.value); //n=cV
@@ -51,10 +68,15 @@
         ascpH.value = -Math.log10(quad(1, Number(ascKa.value), -Number(ascKa.value)*Number(ascconc.value))); //Quadratic to solve for pH
         // Using my document formula to get acid volume
         let H = 10**(-Number(acidpH.value)); //H+
-        let A = (Number(ascconc.value))/(1+Number(ascKa.value)/H); //A-
-        hclvol.value = (Number(ascvol.value)*H-A)/(Number(hclc.value)-H);
+        let A = (Number(ascKa.value)*Number(ascconc.value))/(H+Number(ascKa.value)); //A-
+        hclvol.value = (Number(acidali.value)*H-A)/(Number(hclc.value)-H);
+        // Using my document formula to get base volume
+        H = 10**(-Number(basepH.value)); //H+
+        A = (Number(ascKa.value)*Number(ascconc.value))/(H+Number(ascKa.value)); //A-
+        P = (Number(hpoKa.value)*Number(hpoc.value))/(H+Number(hpoKa.value)); // HPO42-
+        hpovol.value = ((A-Number(ascconc.value))*Number(ascvol.value))/(Number(hpoc.value)+P);
       }
-      [ascmmass, ascvol, ascconc, ascKa, acidpH, hclc].forEach(element => {
+      [ascmmass, ascvol, ascconc, ascKa, acidpH, acidali, hclc, hpoKa, basepH, baseali, hpoc].forEach(element => {
         element.addEventListener("input", (event) => {
           update();
         });
