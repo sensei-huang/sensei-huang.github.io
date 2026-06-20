@@ -74,7 +74,7 @@
         H = 10**(-Number(basepH.value)); //H+
         A = (Number(ascKa.value)*Number(ascconc.value))/(H+Number(ascKa.value)); //A-
         P = (Number(hpoKa.value)*Number(hpoc.value))/(H+Number(hpoKa.value)); // HPO42-
-        hpovol.value = ((A-Number(ascconc.value))*Number(ascvol.value))/(Number(hpoc.value)+P);
+        hpovol.value = ((A-H)*Number(ascvol.value))/(H+Number(hpoc.value)-P);
       }
       [ascmmass, ascvol, ascconc, ascKa, acidpH, acidali, hclc, hpoKa, basepH, baseali, hpoc].forEach(element => {
         element.addEventListener("input", (event) => {
