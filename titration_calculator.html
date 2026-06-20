@@ -9,32 +9,41 @@
     </style>
   </head>
   <body>
+  <h1>Titration calculator</h1>
     <span>Ascorbic acid Molar mass (gmol-1):</span><input type="text" id="Ascmmass" class="shade" value="176.12"></input><br>
-    <span>Volume of ascorbic acid (L):</span><input type="text" id="Ascvol" value="1"></input><br>
+    <span>Volume of ascorbic acid standard solution (L):</span><input type="text" id="Ascvol" value="1"></input><br>
     <span>Concentration of ascorbic acid (molL-1):</span><input type="text" id="Ascconc" value="0.005"></input><br>
     
     <span>Moles of ascorbate (mol):</span><input type="text" id="Ascmol" disabled></input><br>
     <span>Ascorbate mass (g):</span><input type="text" id="Ascmass" disabled></input><br>
-    <br><br>
-
-    <span>Neutral titration (no acid or base):</span><br>
+    
+    <br><hr><br>
+    
+    <span><b>Neutral titration (no acid or base):</b></span><br>
     <span>Ka of Ascorbic acid:</span><input type="text" id="AscKa" class="shade" value="7.9e-5"></input><br>
     <span>Ascorbic acid predicted pH:</span><input type="text" id="AscpH" disabled></input><br>
-
-    <br><br>
-    <span>Acidic titration:</span><br>
+    
+    <br><hr><br>
+    
+    <span><b>Acidic titration:</b></span><br>
     <span>Desired pH:</span><input type="text" id="AcidpH" value="2"></input><br>
     <span>Aliquot volume (L):</span><input type="text" id="Acidali" value="0.05"></input><br>
     <span>HCL concentration (molL-1):</span><input type="text" id="HCLc" value="0.1"></input><br>
     <span>HCL volume (L):</span><input type="text" id="HCLvol" disabled></input><br>
-
-    <br><br>
-    <span>Basic titration:</span><br>
+    
+    <br><hr><br>
+    
+    <span><b>Basic titration:</b></span><br>
+    <span>Na2HPO4 Molar mass (gmol-1):</span><input type="text" id="HPOmmass" class="shade" value="141.96"></input><br>
+    <span>NaHPO4 concentration (molL-1):</span><input type="text" id="HPOc" value="0.1"></input><br>
+    <span>Volume of NaHPO4 standard solution (L):</span><input type="text" id="HPOstvol" value="0.25"></input><br>
+    <span>Moles of NaHPO4 (mol):</span><input type="text" id="HPOmol" disabled></input><br>
+    <span>Anhydrous NaHPO4 mass (g):</span><input type="text" id="HPOmass" disabled></input><br>
+    <br>
     <span>Ka of Na2HPO4:</span><input type="text" id="HPOKa" class="shade" value="6.23e-8"></input><br>
     <span>Desired pH:</span><input type="text" id="BasepH" value="4"></input><br>
     <span>Aliquot volume (L):</span><input type="text" id="Baseali" value="0.05"></input><br>
-    <span>NaHPO4 concentration (molL-1):</span><input type="text" id="HPOc" value="0.1"></input><br>
-    <span>NaHPO4 volume (L):</span><input type="text" id="HPOvol" disabled></input><br>
+    <span>NaHPO4 volume required to get to required pH(L):</span><input type="text" id="HPOvol" disabled></input><br>
     
     
     <script>
@@ -56,10 +65,14 @@
       let hclc = document.getElementById("HCLc");
       let hclvol = document.getElementById("HCLvol");
 
+      let hpommass = document.getElementById("HPOmmass");
       let hpoKa = document.getElementById("HPOKa");
       let basepH = document.getElementById("BasepH");
       let baseali = document.getElementById("Baseali");
       let hpoc = document.getElementById("HPOc");
+      let hpostvol = document.getElementById("HPOstvol");
+      let hpomass = document.getElementById("HPOmass");
+      let hpomol = document.getElementById("HPOmol");
       let hpovol = document.getElementById("HPOvol");
 
       function update(){
@@ -70,13 +83,16 @@
         let H = 10**(-Number(acidpH.value)); //H+
         let A = (Number(ascKa.value)*Number(ascconc.value))/(H+Number(ascKa.value)); //A-
         hclvol.value = (Number(acidali.value)*H-A)/(Number(hclc.value)-H);
+        // Simple calculations
+        hpomol.value = Number(hpoc.value)*Number(hpostvol.value);//n=cV
+        hpomass.value = Number(hpomol.value)*Number(hpommass.value); //m=nM
         // Using my document formula to get base volume
         H = 10**(-Number(basepH.value)); //H+
         A = (Number(ascKa.value)*Number(ascconc.value))/(H+Number(ascKa.value)); //A-
         P = (Number(hpoKa.value)*Number(hpoc.value))/(H+Number(hpoKa.value)); // HPO42-
         hpovol.value = ((A-H)*Number(ascvol.value))/(H+Number(hpoc.value)-P);
       }
-      [ascmmass, ascvol, ascconc, ascKa, acidpH, acidali, hclc, hpoKa, basepH, baseali, hpoc].forEach(element => {
+      [ascmmass, ascvol, ascconc, ascKa, acidpH, acidali, hclc, hpommass, hpoKa, basepH, baseali, hpoc].forEach(element => {
         element.addEventListener("input", (event) => {
           update();
         });
