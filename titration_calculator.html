@@ -84,8 +84,7 @@
         ascpH.value = -Math.log10(quad(1, Number(ascKa.value), -Number(ascKa.value)*Number(ascconc.value))); //Quadratic to solve for pH
         // Using my document formula to get acid volume
         let H = 10**(-Number(acidpH.value)); //H+
-        let A = (Number(ascKa.value)*Number(ascconc.value))/(H+Number(ascKa.value)); //A-
-        hclvol.value = (Number(acidali.value)*H-A)/(Number(hclc.value)-H);
+        hclvol.value = Number(ascvol.value)*(Number(ascKa.value)*Number(ascconc.value)-H*(H+Number(ascKa.value)))/((H-Number(hclc.value))*(H+Number(ascKa.value)));
         // Simple calculations
         hpomol.value = Number(hpoc.value)*Number(hpostvol.value);//n=cV
         hpomass.value = Number(hpomol.value)*Number(hpommass.value); //m=nM
