@@ -1,0 +1,104 @@
+<html>
+  <head>
+  </head>
+  <body>
+    <h1>Exam meals:</h1>
+    <form id="form" onsubmit="event.preventDefault(); submitcode();">
+        <label for="email">Email address: </label>
+        <input type="email" id="email" name="email" required> <br>
+        
+        <label for="fname">First name: </label>
+        <input id="fname" name="fname" required> <br>
+        
+        <label for="lname">Last name: </label>
+        <input id="lname" name="lname" required> <br>
+        
+        <label for="gender">Gender: </label> 
+        <select id="gender" name="gender" required>
+            <option value="" hidden>-- Please choose an option --</option>
+            <option value="Brother">Brother</option>
+            <option value="sister">Sister</option>
+        </select> <br>
+        
+        <label for="phone">Phone number: </label>
+        <input id="phone" name="phone" required> <br>
+        
+        <label for="diet">Dietary requirements: </label>
+        <input id="diet" name="diet"> <br>
+        
+        <label for="family">Additional family members: </label> 
+        <textarea id="family" name="family"></textarea> <br>
+        
+        <label for="adults">Adults: </label> 
+        <input type="number" min="1" max="10" id="adults" name="adults" placeholder="1" required> <br>
+        
+        <label for="children">Children: </label> 
+        <input type="number" min="0" max="10" id="children" name="children" placeholder="0" required> <br>
+        
+        <fieldset id="meals" required>
+            <legend>Meals: </legend>
+            <div>
+                <input type="checkbox" name="monday lunch"/>
+                <label for="monday lunch">Monday lunch (19/20)</label>
+            </div>
+            <div>
+                <input type="checkbox" name="monday dinner"/>
+                <label for="monday dinner">Monday dinner (19/20)</label>
+            </div>
+        </fieldset>
+        
+        <fieldset id="cleanup" required>
+            <legend>Cleanup: </legend>
+            <div>
+                <input type="checkbox" name="monday lunch"/>
+                <label for="monday lunch">Monday lunch (19/20)</label>
+            </div>
+            <div>
+                <input type="checkbox" name="monday dinner"/>
+                <label for="monday dinner">Monday dinner (19/20)</label>
+            </div>
+        </fieldset>
+        
+        <fieldset id="helping">
+            <legend>Helping with cooking: </legend>
+            <div>
+                <input type="checkbox" name="monday lunch"/>
+                <label for="monday lunch">Monday lunch (19/20)</label>
+            </div>
+            <div>
+                <input type="checkbox" name="monday dinner"/>
+                <label for="monday dinner">Monday dinner (19/20)</label>
+            </div>
+        </fieldset>
+        
+        <input type="submit" id="submit" >
+    </form>
+    <script>
+        async function submitcode(){
+            if(document.getElementById("form").reportValidity()){ // Valid form
+                var inout = document.getElementById("sign").value;
+                var email = document.getElementById("email").value;
+                var reason = document.getElementById(inout+"reason").value;
+                var verify = document.getElementById("verify").value;
+                if(reason == "other" && document.getElementById("other").reportValidity()){
+                    reason = document.getElementById("other").value;
+                }
+            }else{ // Invalid form
+              return false;
+            }
+        }
+        const fieldset = document.getElementById('my-fieldset');
+
+  // 2. Find all checkboxes inside the fieldset
+        const checkboxes = fieldset.querySelectorAll('input[type="checkbox"]');
+        
+      // 3. Loop through and get attributes/properties
+        checkboxes.forEach((cb) => {
+            console.log('ID:', cb.id);
+            console.log('Value:', cb.value);
+            console.log('Is Checked:', cb.checked); // Use .checked property for boolean state
+            console.log('Name attribute:', cb.getAttribute('name'));
+        });
+    </script>
+  </body>
+</html>
