@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
   <head>
   </head>
@@ -17,7 +18,7 @@
         <select id="gender" name="gender" required>
             <option value="" hidden>-- Please choose an option --</option>
             <option value="Brother">Brother</option>
-            <option value="sister">Sister</option>
+            <option value="Sister">Sister</option>
         </select> <br>
         
         <label for="phone">Phone number: </label>
@@ -35,7 +36,7 @@
         <label for="children">Children: </label> 
         <input type="number" min="0" max="10" id="children" name="children" placeholder="0" required> <br>
         
-        <fieldset id="meals" required>
+        <fieldset id="meals">
             <legend>Meals: </legend>
             <div>
                 <input type="checkbox" name="monday lunch"/>
@@ -47,7 +48,7 @@
             </div>
         </fieldset>
         
-        <fieldset id="cleanup" required>
+        <fieldset id="cleanup">
             <legend>Cleanup: </legend>
             <div>
                 <input type="checkbox" name="monday lunch"/>
@@ -75,30 +76,62 @@
     </form>
     <script>
         async function submitcode(){
-            if(document.getElementById("form").reportValidity()){ // Valid form
-                var inout = document.getElementById("sign").value;
-                var email = document.getElementById("email").value;
-                var reason = document.getElementById(inout+"reason").value;
-                var verify = document.getElementById("verify").value;
-                if(reason == "other" && document.getElementById("other").reportValidity()){
-                    reason = document.getElementById("other").value;
+            let meals = document.getElementById("meals").querySelectorAll('input[type="checkbox"]');
+            let cleanup = document.getElementById("cleanup").querySelectorAll('input[type="checkbox"]');
+            let onemeal = false, oneclean = false;
+            meals.forEach((cb) => {
+                if(cb.checked){
+                    onemeal = true;
                 }
+                cb.setCustomValidity("");
+            });
+            cleanup.forEach((cb) => {
+                if(cb.checked){
+                    oneclean = true;
+                }
+                cb.setCustomValidity("");
+            });
+            if(!onemeal){
+                meals[meals.length-1].setCustomValidity("Please select at least one meal");
+                meals[meals.length-1].reportValidity();
+                document.getElementById("meals").addEventListener('change', (event) => {
+                    if(event.target.checked){
+                        let meals = document.getElementById("meals").querySelectorAll('input[type="checkbox"]');
+                        meals.forEach((cb) => {
+                            cb.setCustomValidity("");
+                        });
+                    }
+                });
+                return false;
+            }
+            if(!oneclean){
+                cleanup[cleanup.length-1].setCustomValidity("Please select at least one clean up");
+                cleanup[cleanup.length-1].reportValidity();
+                document.getElementById("cleanup").addEventListener('change', (event) => {
+                    if(event.target.checked){
+                        let cleanup = document.getElementById("cleanup").querySelectorAll('input[type="checkbox"]');
+                        cleanup.forEach((cb) => {
+                            cb.setCustomValidity("");
+                        });
+                    }
+                });
+                return false;
+            }
+            if(document.getElementById("form").reportValidity()){ // Valid form
+                let email = document.getElementById("email").value;
+                let fname = document.getElementById("fname").value;
+                let lname = document.getElementById("lname").value;
+                let gender = document.getElementById("gender").value;
+                let phone = document.getElementById("phone").value;
+                let diet = document.getElementById("diet").value;
+                let family = document.getElementById("family").value;
+                let adults = document.getElementById("adults").value;
+                let children = document.getElementById("children").value;
+                let helping = document.getElementById("cleanup").querySelectorAll('input[type="checkbox"]');
             }else{ // Invalid form
-              return false;
+                return false;
             }
         }
-        const fieldset = document.getElementById('my-fieldset');
-
-  // 2. Find all checkboxes inside the fieldset
-        const checkboxes = fieldset.querySelectorAll('input[type="checkbox"]');
-        
-      // 3. Loop through and get attributes/properties
-        checkboxes.forEach((cb) => {
-            console.log('ID:', cb.id);
-            console.log('Value:', cb.value);
-            console.log('Is Checked:', cb.checked); // Use .checked property for boolean state
-            console.log('Name attribute:', cb.getAttribute('name'));
-        });
     </script>
   </body>
 </html>
