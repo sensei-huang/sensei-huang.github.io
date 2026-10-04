@@ -75,6 +75,7 @@
         <input type="submit" id="submit" >
     </form>
     <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx6l7S2KUZZG_v6Ks1nLkFMGOZRrxmIVK6B2g3rSN0bHsBp82ss2MmiUAgrwqYBC08R/exec";
         async function submitcode(){
             let meals = document.getElementById("meals").querySelectorAll('input[type="checkbox"]');
             let cleanup = document.getElementById("cleanup").querySelectorAll('input[type="checkbox"]');
@@ -128,6 +129,70 @@
                 let adults = document.getElementById("adults").value;
                 let children = document.getElementById("children").value;
                 let helping = document.getElementById("cleanup").querySelectorAll('input[type="checkbox"]');
+                
+                const formUrl = new URL(SCRIPT_URL);
+                let meallist = "", cleanuplist = "", helpinglist = "";
+                meals.forEach((cb) => {
+                    if(cb.checked){
+                        if(meallist == ""){
+                            meallist += cb.getAttribute("name");
+                        }else{
+                            meallist += "|"+cb.getAttribute("name");
+                        }
+                    }
+                });
+                cleanup.forEach((cb) => {
+                    if(cb.checked){
+                        if(cleanuplist == ""){
+                            cleanuplist += cb.getAttribute("name");
+                        }else{
+                            cleanuplist += "|"+cb.getAttribute("name");
+                        }
+                    }
+                });
+                helpinglist.forEach((cb) => {
+                    if(cb.checked){
+                        if(helpinglist == ""){
+                            helpinglist += cb.getAttribute("name");
+                        }else{
+                            helpinglist += "|"+cb.getAttribute("name");
+                        }
+                    }
+                });
+                const params = {
+                    email: email,
+                    fname: fname,
+                    lname: lname,
+                    gender: gender,
+                    phone: phone,
+                    diet: diet,
+                    family: family,
+                    adults: adults,
+                    children: children,
+                    meals: meallist,
+                    cleanup: cleanuplist,
+                    helping: helpinglist,
+                };
+                formUrl.search = new URLSearchParams(params);
+                
+                try{
+                    const response = await fetch(formUrl.toString(), {
+                        redirect: "follow",
+                        method: "GET", 
+                        headers: {
+                            "Content-Type": "text/plain;charset=utf-8"
+                        },
+                    });
+                    const tex = await response.text();
+                    if(tex == "ERROR"){ // Error in back end
+                        console.log("Error occured form google sheets api when calling function sheetLog");
+                    }else if(tex == "VERIFY"){ // Incorrect verification code
+                        console.log("Incorrect verification code");
+                    }
+                }catch(error){ // Other errors
+                    console.error(error.message);
+                    alert("An error occured while sending the form! Please try again later.");
+                }
             }else{ // Invalid form
                 return false;
             }
