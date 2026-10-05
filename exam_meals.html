@@ -432,10 +432,10 @@
           while(startdate <= enddate){
             startdate.setDate(startdate.getDate() + 1);
             if(lunch.toLowerCase() === "true"){
-              days.append(`${startdate.getDay()} lunch (${startdate.getDate()}/${startdate.getMonth()+1})`);
+              days.push(`${startdate.getDay()} lunch (${startdate.getDate()}/${startdate.getMonth()+1})`);
             }
             if(dinner.toLowerCase() === "true"){
-              days.append(`${startdate.getDay()} dinner (${startdate.getDate()}/${startdate.getMonth()+1})`);
+              days.push(`${startdate.getDay()} dinner (${startdate.getDate()}/${startdate.getMonth()+1})`);
             }
           }
           
