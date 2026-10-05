@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+  </head>
+  <body>
+    <label for="startdate">Start date:</label><input type="date" id="startdate" oninput="encrypt()"><br>
+    <label for="enddate">End date:</label><input type="date" id="enddate" oninput="encrypt()"><br>
+    <label for="adultcost">Adult cost ($):</label><input type="number" id="adultcost" oninput="encrypt()"><br>
+    <label for="childcost">Child cost ($):</label><input type="number" id="childcost" oninput="encrypt()"><br>
+    <input type="checkbox" id="lunch" oninput="encrypt()"><label for="lunch">Lunch</label><br>
+    <input type="checkbox" id="dinner" oninput="encrypt()"><label for="dinner">Dinner</label><br>
+    <label for="intro">Introduction:</label><br><textarea id="intro" style="field-sizing: content;min-height: 100px; max-height: 400px; width: 100%;" oninput="encrypt()"></textarea><br>
+    <span id="url"></span>
+    <button onclick="navigator.clipboard.writeText(document.getElementById('url').innerText)">Copy URL</button>
+    
+    <script>
+        // Helper to turn a raw text key into a CryptoKey object
+        async function getCryptoKey(rawKey) {
+            const enc = new TextEncoder();
+            const keyBuffer = enc.encode(rawKey.padEnd(32, '0').slice(0, 32)); // Ensure 32 bytes for AES-256
+            return await window.crypto.subtle.importKey(
+                "raw",
+                keyBuffer,
+                "AES-GCM",
+                false,
+                ["encrypt", "decrypt"]
+            );
+        }
+      
+        // 1. ENCRYPT
+        async function encryptText(text, secretKey) {
+            const cryptoKey = await getCryptoKey(secretKey);
+            const enc = new TextEncoder();
+            const encodedText = enc.encode(text);
+            
+            // Initialization Vector (IV) must be unique for every encryption
+            const iv = window.crypto.getRandomValues(new Uint8Array(12)); 
+            
+            const encryptedBuffer = await window.crypto.subtle.encrypt(
+              { name: "AES-GCM", iv: iv },
+              cryptoKey,
+              encodedText
+            );
+      
+            // Combine IV and Ciphertext into a single string for transport
+            const ivHex = Array.from(iv).map(b => b.toString(16).padStart(2, '0')).join('');
+            const encryptedArray = Array.from(new Uint8Array(encryptedBuffer));
+            const encryptedHex = encryptedArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      
+            return `${ivHex}:${encryptedHex}`;
+        }
+      
+        async function encrypt(){
+            const verse = "And you shall know the truth";
+            const originalText = `${document.getElementById("startdate").value}|${document.getElementById("enddate").value}|${document.getElementById("adultcost").value}|${document.getElementById("childcost").value}|${document.getElementById("lunch").checked}|${document.getElementById("dinner").checked}|${document.getElementById("intro").value}`;
+        
+            const encrypted = await encryptText(originalText, verse);
+            document.getElementById("url").innerText = "https://sensei-huang.github.io/exam_meals.html?"+encrypted;
+        };
+        
+    </script>
+  </body>
+</html>
