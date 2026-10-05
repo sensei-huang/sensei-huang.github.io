@@ -478,13 +478,13 @@
           let lunch = arguments[4];
           let dinner = arguments[5];
           while(startdate <= enddate){
-            startdate.setDate(startdate.getDate() + 1);
             if(lunch.toLowerCase() === "true"){
               days.push(`${daynames[startdate.getDay()]} lunch (${startdate.getDate()}/${startdate.getMonth()+1})`);
             }
             if(dinner.toLowerCase() === "true"){
               days.push(`${daynames[startdate.getDay()]} dinner (${startdate.getDate()}/${startdate.getMonth()+1})`);
             }
+            startdate.setDate(startdate.getDate() + 1);
           }
           
           let intro = arguments[6];
