@@ -620,7 +620,7 @@
                         document.getElementById("submit").value = "Submit";
                     }else{
                         const p = document.createElement('p');
-                        p.innerText = conc.replace("XXX", (adultcost*adults+childcost*children)*mealnum);
+                        p.innerText = conc.replace("XXX", ((adultcost*adults+childcost*children)*mealnum).toFixed(2));
                         p.style = "text-align: center;";
                         document.getElementById("form").innerHTML = "";
                         document.getElementById("form").appendChild(p);
