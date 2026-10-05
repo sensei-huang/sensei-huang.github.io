@@ -395,7 +395,7 @@
     </fieldset>
 
     <fieldset id="cleanup">
-        <legend>Cleanup</legend>
+        <legend id="cleanuptitle">Cleanup</legend>
     </fieldset>
 
     <fieldset id="helping">
@@ -408,7 +408,8 @@
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyTn6R-QQOUdkxFnMv_OJYCjPV1aWGvuls-p2X4uyw6GETa-Px4KwA2Hotit28D7nR2/exec";
         const daynames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         let days = [];
-        let adultcost = 0, childcost = 0;
+        let adultcost = 0, childcost = 0, minclean = 0;
+        let conc = "";
 
         // Decryption
         // Helper to turn a raw text key into a CryptoKey object
@@ -488,16 +489,22 @@
           
           let intro = arguments[6];
           document.getElementById("intro").innerText = intro;
+          conc = arguments[7];
           
           adultcost = arguments[2];
           childcost = arguments[3];
+          
+          minclean = arguments[8];
+          if(minclean != 0){
+            document.getElementById("cleanuptitle").innerText = `Cleanup (Please select at least ${minclean} ${minclean >= 2 ? "cleanups" : "cleanup"})`;
+          }
           populateDays();
         }
         
         async function submitcode(){
             let meals = document.getElementById("meals").querySelectorAll('input[type="checkbox"]');
             let cleanup = document.getElementById("cleanup").querySelectorAll('input[type="checkbox"]');
-            let onemeal = false, oneclean = false;
+            let onemeal = false, cleanups = 0;
             meals.forEach((cb) => {
                 if(cb.checked){
                     onemeal = true;
@@ -506,7 +513,7 @@
             });
             cleanup.forEach((cb) => {
                 if(cb.checked){
-                    oneclean = true;
+                    cleanups++;
                 }
                 cb.setCustomValidity("");
             });
@@ -523,7 +530,7 @@
                 });
                 return false;
             }
-            if(!oneclean){
+            if(cleanups < minclean){
                 cleanup[cleanup.length-1].setCustomValidity("Please select at least one clean up");
                 cleanup[cleanup.length-1].reportValidity();
                 document.getElementById("cleanup").addEventListener('change', (event) => {
@@ -550,8 +557,10 @@
                 
                 const formUrl = new URL(SCRIPT_URL);
                 let meallist = "", cleanuplist = "", helpinglist = "";
+                let mealnum = 0;
                 meals.forEach((cb) => {
                     if(cb.checked){
+                        mealnum++;
                         if(meallist == ""){
                             meallist += cb.getAttribute("name");
                         }else{
@@ -611,7 +620,7 @@
                         document.getElementById("submit").value = "Submit";
                     }else{
                         const p = document.createElement('p');
-                        p.innerText = "Thank you for submitting your response!";
+                        p.innerText = conc.replace("XXX", (adultcost*adults+childcost*children)*mealnum);
                         p.style = "text-align: center;";
                         document.getElementById("form").after(p);
                         document.getElementById("form").remove();
