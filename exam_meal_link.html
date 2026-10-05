@@ -55,7 +55,7 @@
             const originalText = `${document.getElementById("startdate").value}|${document.getElementById("enddate").value}|${document.getElementById("adultcost").value}|${document.getElementById("childcost").value}|${document.getElementById("lunch").checked}|${document.getElementById("dinner").checked}|${document.getElementById("intro").value}`;
         
             const encrypted = await encryptText(originalText, verse);
-            document.getElementById("url").innerText = "https://sensei-huang.github.io/exam_meals.html?"+encrypted;
+            document.getElementById("url").innerText = "https://sensei-huang.github.io/exam_meals.html?enc="+encrypted;
         };
         
     </script>
