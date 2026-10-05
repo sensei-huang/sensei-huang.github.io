@@ -38,44 +38,43 @@
         
         <fieldset id="meals">
             <legend>Meals: </legend>
-            <div>
-                <input type="checkbox" name="monday lunch"/>
-                <label for="monday lunch">Monday lunch (19/20)</label>
-            </div>
-            <div>
-                <input type="checkbox" name="monday dinner"/>
-                <label for="monday dinner">Monday dinner (19/20)</label>
-            </div>
         </fieldset>
         
         <fieldset id="cleanup">
             <legend>Cleanup: </legend>
-            <div>
-                <input type="checkbox" name="monday lunch"/>
-                <label for="monday lunch">Monday lunch (19/20)</label>
-            </div>
-            <div>
-                <input type="checkbox" name="monday dinner"/>
-                <label for="monday dinner">Monday dinner (19/20)</label>
-            </div>
         </fieldset>
         
         <fieldset id="helping">
             <legend>Helping with cooking: </legend>
-            <div>
-                <input type="checkbox" name="monday lunch"/>
-                <label for="monday lunch">Monday lunch (19/20)</label>
-            </div>
-            <div>
-                <input type="checkbox" name="monday dinner"/>
-                <label for="monday dinner">Monday dinner (19/20)</label>
-            </div>
         </fieldset>
         
-        <input type="submit" id="submit" >
+        <input type="submit" id="submit" onclick="this.disabled = true; this.value = 'Submitting...';">
     </form>
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw2lRzViUw3SLE9UXgoepco_Sa1gdjJ7iR0h69W3XwjSHs8-nB_Phppnz6He4-jJ0OR/exec";
+        const days = ["Monday lunch", "Monday dinner"];
+        function populateDays(){
+            let meals = document.getElementById("meals");
+            let cleanup = document.getElementById("cleanup");
+            let helping = document.getElementById("helping");
+            for(let i = 0; i < days.length; i++){
+                let day = `<div>
+                    <input type="checkbox" name="${days[i]}" id="${days[i]+"meal"}"/>
+                    <label for="${days[i]+"meal"}">${days[i]}</label>
+                </div>`;
+                meals.insertAdjacentHTML("beforeend", day);
+                day = `<div>
+                    <input type="checkbox" name="${days[i]}" id="${days[i]+"clean"}"/>
+                    <label for="${days[i]+"clean"}">${days[i]}</label>
+                </div>`;
+                cleanup.insertAdjacentHTML("beforeend", day);
+                day = `<div>
+                    <input type="checkbox" name="${days[i]}" id="${days[i]+"helping"}"/>
+                    <label for="${days[i]+"helping"}">${days[i]}</label>
+                </div>`;
+                helping.insertAdjacentHTML("beforeend", day);
+            }
+        }
         async function submitcode(){
             let meals = document.getElementById("meals").querySelectorAll('input[type="checkbox"]');
             let cleanup = document.getElementById("cleanup").querySelectorAll('input[type="checkbox"]');
@@ -150,7 +149,7 @@
                         }
                     }
                 });
-                helpinglist.forEach((cb) => {
+                helping.forEach((cb) => {
                     if(cb.checked){
                         if(helpinglist == ""){
                             helpinglist += cb.getAttribute("name");
@@ -187,20 +186,25 @@
                     if(tex == "ERROR"){ // Error in back end
                         console.log("Error occured from google sheets api when calling function sheetLog");
                         alert("An error occurred while submitting your form! Please try again later or contact the form owners.");
+                        document.getElementById("submit").disabled = false;
+                        document.getElementById("submit").value = "Submit";
                     }else{
                         const p = document.createElement('p');
                         p.innerText = "Thank you for submitting your response!";
                         document.getElementById("form").after(p);
-                        document.getElementById("form").removeElement();
+                        document.getElementById("form").remove();
                     }
                 }catch(error){ // Other errors
                     console.error(error.message);
                     alert("An error occurred while submitting your form! Please try again later or contact the form owners.");
+                    document.getElementById("submit").disabled = false;
+                    document.getElementById("submit").value = "Submit";
                 }
             }else{ // Invalid form
                 return false;
             }
         }
+        populateDays();
     </script>
   </body>
 </html>
