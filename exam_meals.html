@@ -312,6 +312,7 @@
   </head>
   <body>
     <h1>Exam meals:</h1>
+    <p id="intro"></p>
     <form id="form" class="signup-form" onsubmit="event.preventDefault(); submitcode();">
 
     <div class="form-group">
@@ -382,7 +383,69 @@
 </form>
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyTn6R-QQOUdkxFnMv_OJYCjPV1aWGvuls-p2X4uyw6GETa-Px4KwA2Hotit28D7nR2/exec";
-        const days = ["Monday lunch", "Monday dinner"];
+        let days = [];
+        let adultcost = 0, childcost = 0;
+
+        // Decryption
+        // Helper to turn a raw text key into a CryptoKey object
+        async function getCryptoKey(rawKey) {
+          const enc = new TextEncoder();
+          const keyBuffer = enc.encode(rawKey.padEnd(32, '0').slice(0, 32)); // Ensure 32 bytes for AES-256
+          return await window.crypto.subtle.importKey(
+            "raw",
+            keyBuffer,
+            "AES-GCM",
+            false,
+            ["encrypt", "decrypt"]
+          );
+        }
+        
+        async function decryptText(encryptedData, secretKey) {
+          const cryptoKey = await getCryptoKey(secretKey);
+          const [ivHex, encryptedHex] = encryptedData.split(':');
+          
+          // Reconstruct IV and Ciphertext byte arrays
+          const iv = new Uint8Array(ivHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+          const encryptedBuffer = new Uint8Array(encryptedHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+        
+          const decryptedBuffer = await window.crypto.subtle.decrypt(
+            { name: "AES-GCM", iv: iv },
+            cryptoKey,
+            encryptedBuffer
+          );
+        
+          const dec = new TextDecoder();
+          return dec.decode(decryptedBuffer);
+        }
+
+        function getParameters(){
+          const queryString = window.location.search;
+          const urlParams = new URLSearchParams(queryString);
+          const enc = urlParams.get('enc');
+          const verse = "And you shall know the truth";
+          let arguments = await decryptText(enc, verse);
+          arguments = arguments.split("|");
+          let startdate = new Date(arguments[0]);
+          let enddate = new Date(arguments[1]);
+          let lunch = arguments[4];
+          let dinner = arguments[5];
+          while(startdate <= enddate){
+            startdate.setDate(startdate.getDate() + 1);
+            if(lunch.toLowerCase() === "true"){
+              days.append(`${startdate.getDay()} lunch (${startdate.getDate()}/${startdate.getMonth()+1})`);
+            }
+            if(dinner.toLowerCase() === "true"){
+              days.append(`${startdate.getDay()} dinner (${startdate.getDate()}/${startdate.getMonth()+1})`);
+            }
+          }
+          
+          let intro = arguments[6];
+          document.getElementById("intro").innerText = intro;
+          
+          adultcost = arguments[2];
+          childcost = arguments[3];
+        }
+        
         function populateDays(){
             let meals = document.getElementById("meals");
             let cleanup = document.getElementById("cleanup");
