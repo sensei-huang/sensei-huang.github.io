@@ -622,8 +622,8 @@
                         const p = document.createElement('p');
                         p.innerText = conc.replace("XXX", (adultcost*adults+childcost*children)*mealnum);
                         p.style = "text-align: center;";
-                        document.getElementById("form").after(p);
-                        document.getElementById("form").remove();
+                        document.getElementById("form").innerHTML = "";
+                        document.getElementById("form").appendChild(p);
                     }
                 }catch(error){ // Other errors
                     console.error(error.message);
