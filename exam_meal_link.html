@@ -11,6 +11,8 @@
     <input type="checkbox" id="dinner" oninput="encrypt()"><label for="dinner">Dinner</label><br>
     <label for="intro">Introduction:</label><br><textarea id="intro" style="field-sizing: content;min-height: 100px; max-height: 400px; width: 100%;" oninput="encrypt()"></textarea><br>
     <label for="conc">Conclusion (add XXX for the amount to pay):</label><br><textarea id="conc" style="field-sizing: content;min-height: 100px; max-height: 400px; width: 100%;" oninput="encrypt()"></textarea><br>
+    <label for="minclean">Minimum amount of cleaning:</label><input type="number" id="minclean" oninput="encrypt()"><br>
+    
     <span id="url"></span>
     <button onclick="navigator.clipboard.writeText(document.getElementById('url').innerText)">Copy URL</button>
     
@@ -53,7 +55,7 @@
       
         async function encrypt(){
             const verse = "And you shall know the truth";
-            const originalText = `${document.getElementById("startdate").value}|${document.getElementById("enddate").value}|${document.getElementById("adultcost").value}|${document.getElementById("childcost").value}|${document.getElementById("lunch").checked}|${document.getElementById("dinner").checked}|${document.getElementById("intro").value|${document.getElementById("conc").value}`;
+            const originalText = `${document.getElementById("startdate").value}|${document.getElementById("enddate").value}|${document.getElementById("adultcost").value}|${document.getElementById("childcost").value}|${document.getElementById("lunch").checked}|${document.getElementById("dinner").checked}|${document.getElementById("intro").value|${document.getElementById("conc").value}|${document.getElementById("minclean").value}`;
         
             const encrypted = await encryptText(originalText, verse);
             document.getElementById("url").innerText = "https://sensei-huang.github.io/exam_meals.html?enc="+encrypted;
