@@ -107,14 +107,86 @@
                 padding: 0 0.4rem;
             }
             
-            /* Works with whatever your JS generates inside the fieldsets */
-            .signup-form fieldset label {
+            /* Lay the options out in a responsive grid */
+            .signup-form fieldset {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+                gap: 0.5rem;
+            }
+            
+            .signup-form legend {
+                /* legends sit outside the grid, so keep the padding from before */
+                padding: 0 0.4rem;
+            }
+            
+            /* One option */
+            .check-option {
+                position: relative;
+            }
+            
+            /* Hide the native checkbox visually, but keep it accessible */
+            .check-option input[type="checkbox"] {
+                position: absolute;
+                opacity: 0;
+                width: 1px;
+                height: 1px;
+                margin: 0;
+            }
+            
+            /* The label becomes the clickable pill */
+            .signup-form .check-option label {
                 display: flex;
                 align-items: center;
-                gap: 0.5rem;
-                margin: 0.35rem 0;
+                gap: 0.6rem;
+                padding: 0.55rem 0.8rem;
+                font-size: 0.95rem;
                 font-weight: 400;
+                background: var(--field-bg);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
                 cursor: pointer;
+                user-select: none;
+                transition: background 0.15s, border-color 0.15s, color 0.15s;
+            }
+            
+            /* Custom tick box */
+            .check-option label::before {
+                content: "";
+                flex: none;
+                width: 1.1rem;
+                height: 1.1rem;
+                border: 2px solid var(--border);
+                border-radius: 4px;
+                background: #fff;
+                display: grid;
+                place-items: center;
+                font-size: 0.75rem;
+                line-height: 1;
+                color: #fff;
+                transition: background 0.15s, border-color 0.15s;
+            }
+            
+            .check-option label:hover {
+                border-color: var(--accent);
+            }
+            
+            /* Checked state */
+            .check-option input:checked + label {
+                background: rgba(47, 111, 237, 0.08);
+                border-color: var(--accent);
+                color: var(--accent-dark);
+                font-weight: 600;
+            }
+            
+            .check-option input:checked + label::before {
+                content: "✓";
+                background: var(--accent);
+                border-color: var(--accent);
+            }
+            
+            /* Keyboard focus ring */
+            .check-option input:focus-visible + label {
+                box-shadow: 0 0 0 3px rgba(47, 111, 237, 0.3);
             }
             
             .signup-form input[type="checkbox"],
@@ -316,17 +388,17 @@
             let cleanup = document.getElementById("cleanup");
             let helping = document.getElementById("helping");
             for(let i = 0; i < days.length; i++){
-                let day = `<div>
-                    <input type="checkbox" name="${days[i]}" id="${days[i]+"meal"}"/>
-                    <label for="${days[i]+"meal"}">${days[i]}</label>
+                let day = `<div class="check-option">
+                    <input type="checkbox" name="${days[i]}" id="${days[i] + "meal"}">
+                    <label for="${days[i] + "meal"}">${days[i]}</label>
                 </div>`;
                 meals.insertAdjacentHTML("beforeend", day);
-                day = `<div>
+                day = `<div class="check-option">
                     <input type="checkbox" name="${days[i]}" id="${days[i]+"clean"}"/>
                     <label for="${days[i]+"clean"}">${days[i]}</label>
                 </div>`;
                 cleanup.insertAdjacentHTML("beforeend", day);
-                day = `<div>
+                day = `<div class="check-option">
                     <input type="checkbox" name="${days[i]}" id="${days[i]+"helping"}"/>
                     <label for="${days[i]+"helping"}">${days[i]}</label>
                 </div>`;
