@@ -531,7 +531,7 @@
                 return false;
             }
             if(cleanups < minclean){
-                cleanup[cleanup.length-1].setCustomValidity("Please select at least one clean up");
+                cleanup[cleanup.length-1].setCustomValidity(`Please select at least ${minclean} ${minclean >= 2 ? "cleanups" : "cleanup"}`);
                 cleanup[cleanup.length-1].reportValidity();
                 document.getElementById("cleanup").addEventListener('change', (event) => {
                     if(event.target.checked){
