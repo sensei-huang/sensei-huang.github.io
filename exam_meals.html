@@ -75,7 +75,7 @@
         <input type="submit" id="submit" >
     </form>
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx6l7S2KUZZG_v6Ks1nLkFMGOZRrxmIVK6B2g3rSN0bHsBp82ss2MmiUAgrwqYBC08R/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw2lRzViUw3SLE9UXgoepco_Sa1gdjJ7iR0h69W3XwjSHs8-nB_Phppnz6He4-jJ0OR/exec";
         async function submitcode(){
             let meals = document.getElementById("meals").querySelectorAll('input[type="checkbox"]');
             let cleanup = document.getElementById("cleanup").querySelectorAll('input[type="checkbox"]');
@@ -185,13 +185,17 @@
                     });
                     const tex = await response.text();
                     if(tex == "ERROR"){ // Error in back end
-                        console.log("Error occured form google sheets api when calling function sheetLog");
-                    }else if(tex == "VERIFY"){ // Incorrect verification code
-                        console.log("Incorrect verification code");
+                        console.log("Error occured from google sheets api when calling function sheetLog");
+                        alert("An error occurred while submitting your form! Please try again later or contact the form owners.");
+                    }else{
+                        const p = document.createElement('p');
+                        p.innerText = "Thank you for submitting your response!";
+                        document.getElementById("form").after(p);
+                        document.getElementById("form").removeElement();
                     }
                 }catch(error){ // Other errors
                     console.error(error.message);
-                    alert("An error occured while sending the form! Please try again later.");
+                    alert("An error occurred while submitting your form! Please try again later or contact the form owners.");
                 }
             }else{ // Invalid form
                 return false;
