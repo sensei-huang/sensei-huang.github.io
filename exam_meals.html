@@ -308,12 +308,34 @@
             a:hover {
                 color: var(--accent-dark);
             }
+        
+            .form-intro {
+                margin: 0 0 1.75rem;
+                padding: 1.1rem 1.25rem;
+                background: rgba(47, 111, 237, 0.07);
+                border-left: 5px solid var(--accent);
+                border-radius: var(--radius);
+            }
+
+            .form-intro p {
+                max-width: none;          /* use the full card width */
+                margin: 0 0 0.6rem;
+                font-size: 0.95rem;
+                line-height: 1.6;
+                color: var(--text);
+            }
       </style>
   </head>
   <body>
     <h1>Exam meals:</h1>
-    <p id="intro"></p>
     <form id="form" class="signup-form" onsubmit="event.preventDefault(); submitcode();">
+    
+      <div class="form-intro">
+          <p id="intro">
+              Please fill in the details below so we can plan food and seating.
+              Fields marked <strong>(optional)</strong> can be left blank.
+          </p>
+      </div>
 
     <div class="form-group">
         <label for="email">Email address</label>
@@ -383,6 +405,7 @@
 </form>
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyTn6R-QQOUdkxFnMv_OJYCjPV1aWGvuls-p2X4uyw6GETa-Px4KwA2Hotit28D7nR2/exec";
+        const daynames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         let days = [];
         let adultcost = 0, childcost = 0;
 
@@ -418,34 +441,6 @@
           return dec.decode(decryptedBuffer);
         }
 
-        async function getParameters(){
-          const queryString = window.location.search;
-          const urlParams = new URLSearchParams(queryString);
-          const enc = urlParams.get('enc');
-          const verse = "And you shall know the truth";
-          let arguments = await decryptText(enc, verse);
-          arguments = arguments.split("|");
-          let startdate = new Date(arguments[0]);
-          let enddate = new Date(arguments[1]);
-          let lunch = arguments[4];
-          let dinner = arguments[5];
-          while(startdate <= enddate){
-            startdate.setDate(startdate.getDate() + 1);
-            if(lunch.toLowerCase() === "true"){
-              days.push(`${startdate.getDay()} lunch (${startdate.getDate()}/${startdate.getMonth()+1})`);
-            }
-            if(dinner.toLowerCase() === "true"){
-              days.push(`${startdate.getDay()} dinner (${startdate.getDate()}/${startdate.getMonth()+1})`);
-            }
-          }
-          
-          let intro = arguments[6];
-          document.getElementById("intro").innerText = intro;
-          
-          adultcost = arguments[2];
-          childcost = arguments[3];
-        }
-        
         function populateDays(){
             let meals = document.getElementById("meals");
             let cleanup = document.getElementById("cleanup");
@@ -468,6 +463,36 @@
                 helping.insertAdjacentHTML("beforeend", day);
             }
         }
+      
+        async function getParameters(){
+          const queryString = window.location.search;
+          const urlParams = new URLSearchParams(queryString);
+          const enc = urlParams.get('enc');
+          const verse = "And you shall know the truth";
+          let arguments = await decryptText(enc, verse);
+          arguments = arguments.split("|");
+          let startdate = new Date(arguments[0]);
+          let enddate = new Date(arguments[1]);
+          let lunch = arguments[4];
+          let dinner = arguments[5];
+          while(startdate <= enddate){
+            startdate.setDate(startdate.getDate() + 1);
+            if(lunch.toLowerCase() === "true"){
+              days.push(`${daynames[startdate.getDay()]} lunch (${startdate.getDate()}/${startdate.getMonth()+1})`);
+            }
+            if(dinner.toLowerCase() === "true"){
+              days.push(`${daynames[startdate.getDay()]} dinner (${startdate.getDate()}/${startdate.getMonth()+1})`);
+            }
+          }
+          
+          let intro = arguments[6];
+          document.getElementById("intro").innerText = intro;
+          
+          adultcost = arguments[2];
+          childcost = arguments[3];
+          populateDays();
+        }
+        
         async function submitcode(){
             let meals = document.getElementById("meals").querySelectorAll('input[type="checkbox"]');
             let cleanup = document.getElementById("cleanup").querySelectorAll('input[type="checkbox"]');
@@ -601,7 +626,6 @@
             }
         }
         getParameters();
-        populateDays();
     </script>
   </body>
 </html>
