@@ -12,11 +12,13 @@
     <label for="intro">Introduction:</label><br><textarea id="intro" style="field-sizing: content;min-height: 100px; max-height: 400px; width: 100%;" oninput="encrypt()"></textarea><br>
     <label for="conc">Conclusion (add XXX for the amount to pay):</label><br><textarea id="conc" style="field-sizing: content;min-height: 100px; max-height: 400px; width: 100%;" oninput="encrypt()"></textarea><br>
     <label for="minclean">Minimum amount of cleaning:</label><input type="number" id="minclean" oninput="encrypt()"><br>
-    
-    <span id="url"></span>
-    <button onclick="navigator.clipboard.writeText(document.getElementById('url').innerText)">Copy URL</button>
+    <br>
+    <button onclick="copyURL()">Copy URL</button>
+    <button onclick="copyHeaders()">Copy headers for Google Sheets</button>
     
     <script>
+        let url="https://sensei-huang.github.io/exam_meals.html?enc=";
+        const daynames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         // Helper to turn a raw text key into a CryptoKey object
         async function getCryptoKey(rawKey) {
             const enc = new TextEncoder();
@@ -59,9 +61,62 @@
             const originalText = vars.join("|");
         
             const encrypted = await encryptText(originalText, verse);
-            document.getElementById("url").innerText = "https://sensei-huang.github.io/exam_meals.html?enc="+encrypted;
+            url = "https://sensei-huang.github.io/exam_meals.html?enc="+encrypted;
         };
-        
+
+        function copyURL(){
+          navigator.clipboard.writeText(url)
+            .then(() => {
+              alert('URL copied!');
+            })
+            .catch(err => {
+              console.error('Failed to copy url: ', err);
+            });
+        }
+
+        function copyHeaders(){
+          let space = Number(prompt("How much spacing between headers (e.g. 0 for Numbers, 1 for Allergies and 2 for Attendance)?"));
+          let table = document.createElement("table");
+          table.id = "headers";
+          table.style = "font-family: Arial; font-size: 10pt;";
+          let tbody = document.createElement("tbody");
+          table.append(tbody);
+          let tr = document.createElement("tr");
+          tbody.append(tr);
+          let startdate = new Date(document.getElementById("startdate").value);
+          let enddate = new Date(document.getElementById("enddate").value);
+          let days = [];
+          while(startdate <= enddate){
+            if(document.getElementById("lunch").checked){
+              days.push(`${daynames[startdate.getDay()]} lunch (${startdate.getDate()}/${startdate.getMonth()+1})`);
+              for(let i = 0; i < space; i++){
+                days.push("");
+              }
+            }
+            if(document.getElementById("dinner").checked){
+              days.push(`${daynames[startdate.getDay()]} dinner (${startdate.getDate()}/${startdate.getMonth()+1})`);
+              for(let i = 0; i < space; i++){
+                days.push("");
+              }
+            }
+            startdate.setDate(startdate.getDate() + 1);
+          }
+          days.forEach(day => {
+            const td = document.createElement("td");
+            td.innerText = day;
+            tr.appendChild(td);
+          });
+          const tableHtml = table.outerHTML;
+          const blob = new Blob([tableHtml], { type: 'text/html' });
+          const clipboardItem = new ClipboardItem({ [blob.type]: blob });
+          navigator.clipboard.write([clipboardItem])
+            .then(() => {
+              alert('Headers copied!');
+            })
+            .catch(err => {
+              console.error('Failed to copy header: ', err);
+            });
+        }
     </script>
   </body>
 </html>
