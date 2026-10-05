@@ -48,7 +48,7 @@
             <legend>Helping with cooking: </legend>
         </fieldset>
         
-        <input type="submit" id="submit" onclick="this.disabled = true; this.value = 'Submitting...';">
+        <input type="submit" id="submit">
     </form>
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw2lRzViUw3SLE9UXgoepco_Sa1gdjJ7iR0h69W3XwjSHs8-nB_Phppnz6He4-jJ0OR/exec";
@@ -173,7 +173,9 @@
                     helping: helpinglist,
                 };
                 formUrl.search = new URLSearchParams(params);
-                
+
+                document.getElementById("submit").disabled = true; 
+                document.getElementById("submit").value = 'Submitting...';
                 try{
                     const response = await fetch(formUrl.toString(), {
                         redirect: "follow",
