@@ -626,7 +626,7 @@
                     });
                     const tex = await response.text();
                     if(tex == "ERROR"){ // Error in back end
-                        console.log("Error occured from google sheets api when calling function sheetLog");
+                        console.log("Error occured from google sheets");
                         alert("An error occurred while submitting your form! Please try again later or contact the form owners.");
                         document.getElementById("submit").disabled = false;
                         document.getElementById("submit").value = "Submit";
