@@ -500,6 +500,17 @@
             document.getElementById("cleanuptitle").innerText = `Cleanup (Please select at least ${minclean} ${minclean >= 2 ? "cleanups" : "cleanup"})`;
           }
           populateDays();
+          let deadline = new Date(arguments[9]);
+          deadline.setHours(0, 0, 0, 0);
+          let today = new Date();
+          today.setHours(0, 0, 0, 0);
+          if(deadline <= today){
+            const p = document.createElement('p');
+            p.innerText = "Sorry, this form is no longer receiving responses as the deadline was on "+deadline.toLocaleDateString());
+            p.style = "text-align: center;";
+            document.getElementById("form").innerHTML = "";
+            document.getElementById("form").appendChild(p);
+          }
         }
         
         async function submitcode(){
