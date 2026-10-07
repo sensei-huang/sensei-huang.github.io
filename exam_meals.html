@@ -504,7 +504,7 @@
           deadline.setHours(0, 0, 0, 0);
           let today = new Date();
           today.setHours(0, 0, 0, 0);
-          if(deadline <= today){
+          if(today > deadline){
             const p = document.createElement('p');
             p.innerText = "Sorry, this form is no longer receiving responses as the deadline was on "+deadline.toLocaleDateString('en-GB');
             p.style = "text-align: center;";
