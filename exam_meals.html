@@ -625,9 +625,14 @@
                         },
                     });
                     const tex = await response.text();
-                    if(tex == "ERROR"){ // Error in back end
-                        console.log("Error occured from google sheets");
+                    if(tex.split("|")[0] == "ERROR"){ // Error in back end
+                        console.log("Error occured from google sheets:"+tex.split("|")[1]);
                         alert("An error occurred while submitting your form! Please try again later or contact the form owners.");
+                        document.getElementById("submit").disabled = false;
+                        document.getElementById("submit").value = "Submit";
+                    }else if(tex == "TIMEOUT"){
+                        console.log("Timeout error occurred");
+                        alert("The form took too long to submit since too many people are using it at the same time! Please try again.");
                         document.getElementById("submit").disabled = false;
                         document.getElementById("submit").value = "Submit";
                     }else{
